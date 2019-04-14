@@ -3,8 +3,10 @@ module Main where
 import Prelude
 
 import Effect (Effect)
-import Effect.Console (log)
+import Effect.Class.Console as Console
+import Options as Options
 
 main :: Effect Unit
 main = do
-  log "🍝"
+  options <- Options.parse
+  Console.logShow options
