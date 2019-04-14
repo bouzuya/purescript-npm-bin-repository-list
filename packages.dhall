@@ -114,6 +114,9 @@ let mkPackage =
 let upstream =
       https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.3-20190409/src/packages.dhall sha256:d327eb707262c9087f8d5caf471690bf69afc8f6307618d9c2ceab13755fb194
 
+let bouzuya =
+      https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190408/bouzuya.dhall sha256:13c27d33a827e9bcfcaca4fe7695f54a6042b9a4d6887d1333e27c3ccc585585
+
 let overrides = {=}
 
 let additions =
@@ -127,6 +130,6 @@ let additions =
           [ "exitcodes", "free", "memoize", "node-process" ]
           "https://github.com/f-o-a-m/purescript-optparse.git"
           "v1.0.0"
-      }
+      } // bouzuya
 
 in  upstream // overrides // additions
