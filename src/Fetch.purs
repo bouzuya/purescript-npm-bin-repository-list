@@ -1,5 +1,6 @@
 module Fetch
-  ( fetchRepos
+  ( Repo
+  , fetchRepos
   ) where
 
 import Prelude
