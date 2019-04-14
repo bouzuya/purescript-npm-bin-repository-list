@@ -21,7 +21,8 @@ import Options (Options)
 import Simple.JSON as SimpleJSON
 
 type Repo =
-  { full_name :: String
+  { archived :: Boolean
+  , full_name :: String
   , language :: Nullable String
   , stargazers_count :: Int
   , updated_at :: String

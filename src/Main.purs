@@ -21,6 +21,7 @@ format repo =
   String.joinWith
     "\t"
     [ repo.full_name
+    , if repo.archived then "[Archived]" else ""
     , Maybe.fromMaybe "(null)" (Nullable.toMaybe repo.language)
     , (show repo.stargazers_count) <> " stars"
     ]
