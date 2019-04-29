@@ -29,8 +29,8 @@ type Repo =
   , updated_at :: String
   }
 
-fetchRepos :: Options -> Int -> Aff (Array Repo)
-fetchRepos options page = do
+fetchRepos :: Options -> Int -> Int -> Aff (Array Repo)
+fetchRepos options perPage page = do
   order <-
     Maybe.maybe
       (Aff.throwError (Aff.error "unknown sort"))
@@ -45,7 +45,7 @@ fetchRepos options page = do
         [ "type=" <> options.type
         , "sort=" <> RepoOrder.toString order
         , "direction=" <> options.direction
-        , "per_page=100"
+        , "per_page=" <> show perPage
         , "page=" <> show page
         ]
     url = baseUrl <> path <> "?" <> query

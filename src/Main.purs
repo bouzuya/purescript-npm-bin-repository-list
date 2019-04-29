@@ -4,6 +4,7 @@ module Main
 
 import Prelude
 
+import Data.Array as Array
 import Data.Maybe as Maybe
 import Data.Nullable as Nullable
 import Effect (Effect)
@@ -32,5 +33,12 @@ format = Table.format <<< toTable
 main :: Effect Unit
 main = Aff.launchAff_ do
   options <- Class.liftEffect Options.parse
-  repos <- Fetch.fetchRepos options 1
+  count <- Fetch.fetchRepositoryCount options.username
+  repos <-
+    Array.foldRecM
+      (\acc page -> do
+        r <- Fetch.fetchRepos options 100 page
+        pure (acc <> r))
+      []
+      (Array.range 1 ((count / 100) + 1))
   Class.liftEffect (Console.log (format repos))
