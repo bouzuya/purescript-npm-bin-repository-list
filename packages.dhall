@@ -109,27 +109,28 @@ let additions =
 -}
 
 let mkPackage =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.3-20190409/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.5-20190427/src/mkPackage.dhall sha256:0b197efa1d397ace6eb46b243ff2d73a3da5638d8d0ac8473e8e4a8fc528cf57
 
 let upstream =
-      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.3-20190409/src/packages.dhall sha256:d327eb707262c9087f8d5caf471690bf69afc8f6307618d9c2ceab13755fb194
+      https://raw.githubusercontent.com/purescript/package-sets/psc-0.12.5-20190427/src/packages.dhall sha256:6b17811247e1f825034fa4dacc4b8ec5eddd0e832e0e1579c2ba3b9b2a1c63fe
 
 let bouzuya =
-      https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190408/bouzuya.dhall sha256:13c27d33a827e9bcfcaca4fe7695f54a6042b9a4d6887d1333e27c3ccc585585
+      https://raw.githubusercontent.com/bouzuya/purescript-bouzuya-packages/20190426/bouzuya.dhall sha256:86675151328c67535e1724c626da89176fe99e07938eabaabfd3f7bff3d9584e
 
 let overrides = {=}
 
 let additions =
-      { exitcodes =
-          mkPackage
-          [ "enums" ]
-          "https://github.com/Risto-Stevcev/purescript-exitcodes.git"
-          "v4.0.0"
-      , optparse =
-          mkPackage
-          [ "exitcodes", "free", "memoize", "node-process" ]
-          "https://github.com/f-o-a-m/purescript-optparse.git"
-          "v1.0.0"
-      } // bouzuya
+          { exitcodes =
+              mkPackage
+              [ "enums" ]
+              "https://github.com/Risto-Stevcev/purescript-exitcodes.git"
+              "v4.0.0"
+          , optparse =
+              mkPackage
+              [ "exitcodes", "free", "memoize", "node-process" ]
+              "https://github.com/f-o-a-m/purescript-optparse.git"
+              "v1.0.0"
+          }
+      //  bouzuya
 
 in  upstream // overrides // additions
