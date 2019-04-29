@@ -6,10 +6,7 @@ You can edit this file as you like.
     "repository-list"
 , dependencies =
     [ "bouzuya-http-client"
-    , "console"
     , "debug"
-    , "effect"
-    , "node-process"
     , "optparse"
     , "psci-support"
     , "simple-json"
