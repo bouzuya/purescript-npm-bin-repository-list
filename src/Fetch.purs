@@ -1,6 +1,7 @@
 module Fetch
   ( Repo
   , fetchRepos
+  , fetchRepositoryCount
   ) where
 
 import Prelude
@@ -64,3 +65,26 @@ fetchRepos options page = do
     (Aff.throwError <<< Aff.error <<< show)
     pure
     (SimpleJSON.readJSON b :: _ (Array Repo))
+
+fetchRepositoryCount :: String -> Aff Int
+fetchRepositoryCount username = do
+  let
+    baseUrl = "https://api.github.com"
+    path = "/users/" <> username
+    url = baseUrl <> path
+  { body } <-
+    HttpClient.fetch
+      ( HttpClient.headers :=
+        Object.fromFoldable [ Tuple.Tuple "User-Agent" "repository-list" ]
+      <> HttpClient.method := Method.GET
+      <> HttpClient.url := url
+      )
+  b <-
+    Maybe.maybe
+      (Aff.throwError (Aff.error "body is nothing"))
+      pure
+      body
+  Either.either
+    (Aff.throwError <<< Aff.error <<< show)
+    (pure <<< _.public_repos)
+    (SimpleJSON.readJSON b :: _ ({ public_repos :: Int }))
