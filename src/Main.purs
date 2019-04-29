@@ -5,6 +5,7 @@ module Main
 import Prelude
 
 import Data.Array as Array
+import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
 import Data.Nullable as Nullable
 import Effect (Effect)
@@ -30,9 +31,17 @@ format = Table.format <<< toTable
       , (show repo.stargazers_count) <> " stars"
       ]
 
+booleanFromString :: String -> Maybe Boolean
+booleanFromString =
+  case _ of
+    "true" -> Maybe.Just true
+    "false" -> Maybe.Just false
+    _ -> Maybe.Nothing
+
 main :: Effect Unit
 main = Aff.launchAff_ do
   options <- Class.liftEffect Options.parse
+  let archived = booleanFromString options.archived
   count <- Fetch.fetchRepositoryCount options.username
   repos <-
     Array.foldRecM
@@ -41,4 +50,10 @@ main = Aff.launchAff_ do
         pure (acc <> r))
       []
       (Array.range 1 ((count / 100) + 1))
-  Class.liftEffect (Console.log (format repos))
+  let
+    filtered =
+      Maybe.maybe
+        repos
+        (\b -> Array.filter ((eq b) <<< _.archived) repos)
+        archived
+  Class.liftEffect (Console.log (format filtered))

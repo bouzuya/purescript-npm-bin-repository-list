@@ -10,7 +10,8 @@ import Options.Applicative ((<**>))
 import Options.Applicative as Options
 
 type Options =
-  { direction :: String
+  { archived :: String
+  , direction :: String
   , sort :: String
   , type :: String
   , username :: String
@@ -27,8 +28,12 @@ parse = Options.execParser opts
 
 parser :: Options.Parser Options
 parser =
-  ({ direction: _, sort: _, type: _, username: _, version: _ })
+  ({ archived: _, direction: _, sort: _, type: _, username: _, version: _ })
     <$> Options.strOption
+        ( Options.long "archived"
+        <> Options.metavar "ARCHIVED"
+        <> Options.help "filter archived/unarchived (true, false)" )
+    <*> Options.strOption
         ( Options.long "direction"
         <> Options.showDefault
         <> (Options.value "asc")
