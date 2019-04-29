@@ -13,6 +13,7 @@ type Options =
   { direction :: String
   , sort :: String
   , type :: String
+  , username :: String
   , version :: Boolean
   }
 
@@ -26,7 +27,7 @@ parse = Options.execParser opts
 
 parser :: Options.Parser Options
 parser =
-  ({ direction: _, sort: _, type: _, version: _ })
+  ({ direction: _, sort: _, type: _, username: _, version: _ })
     <$> Options.strOption
         ( Options.long "direction"
         <> Options.showDefault
@@ -45,6 +46,10 @@ parser =
         <> (Options.value "owner")
         <> Options.metavar "TYPE"
         <> Options.help "type (all, owner, member)" )
+    <*> Options.strOption
+        ( Options.long "username"
+        <> Options.metavar "USERNAME"
+        <> Options.help "GitHub username" )
     <*> Options.switch
         ( Options.long "version"
         <> Options.short 'V'

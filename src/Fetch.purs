@@ -36,7 +36,8 @@ fetchRepos options page = do
       pure
       (RepoOrder.fromString options.sort)
   let
-    baseUrl = "https://api.github.com/users/bouzuya/repos"
+    baseUrl = "https://api.github.com"
+    path = "/users/" <> options.username <> "/repos"
     query =
       String.joinWith
         "&"
@@ -46,7 +47,7 @@ fetchRepos options page = do
         , "per_page=100"
         , "page=" <> show page
         ]
-    url = baseUrl <> "?" <> query
+    url = baseUrl <> path <> "?" <> query
   { body } <-
     HttpClient.fetch
       ( HttpClient.headers :=
