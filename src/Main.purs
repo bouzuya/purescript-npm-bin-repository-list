@@ -4,12 +4,8 @@ module Main
 
 import Prelude
 
-import Data.Array as Array
-import Data.Foldable as Foldable
 import Data.Maybe as Maybe
 import Data.Nullable as Nullable
-import Data.String as String
-import Data.Tuple as Tuple
 import Effect (Effect)
 import Effect.Aff as Aff
 import Effect.Class as Class
@@ -17,37 +13,16 @@ import Effect.Class.Console as Console
 import Fetch (Repo)
 import Fetch as Fetch
 import Options as Options
+import Table as Table
 
 format :: Array Repo -> String
-format repos = String.joinWith "\n" (map (formatLine maxLengths) formattedRepos)
+format = Table.format <<< toTable
   where
-    formatLine :: Array Int -> Array String -> String
-    formatLine ls xs =
-      String.joinWith
-        " "
-        (map
-          (\(Tuple.Tuple s l) -> padRight l s)
-          (Array.zip xs ls))
+    toTable :: Array Repo -> Array (Array String)
+    toTable = map toRow
 
-    padRight :: Int -> String -> String
-    padRight n s =
-      s <> (String.joinWith "" (Array.replicate (n - (String.length s)) " "))
-
-    formattedRepos :: Array (Array String)
-    formattedRepos = map formatRepo repos
-
-    maxLengths :: Array Int
-    maxLengths = lengths formattedRepos
-
-    lengths :: Array (Array String) -> Array Int
-    lengths xs =
-      Foldable.foldl
-        (\a b -> Array.zipWith max a (map String.length b))
-        (Array.replicate (Maybe.maybe 0 Array.length (Array.head xs)) 0)
-        xs
-
-    formatRepo :: Repo -> Array String
-    formatRepo repo =
+    toRow :: Repo -> Array String
+    toRow repo =
       [ repo.full_name
       , if repo.archived then "[Archived]" else ""
       , Maybe.fromMaybe "(null)" (Nullable.toMaybe repo.language)
