@@ -8,6 +8,7 @@ import Data.Array as Array
 import Data.Maybe (Maybe)
 import Data.Maybe as Maybe
 import Data.Nullable as Nullable
+import Data.String as String
 import Effect (Effect)
 import Effect.Aff as Aff
 import Effect.Class as Class
@@ -41,7 +42,12 @@ booleanFromString =
 main :: Effect Unit
 main = Aff.launchAff_ do
   options <- Class.liftEffect Options.parse
-  let archived = booleanFromString options.archived
+  let
+    archived = booleanFromString options.archived
+    language =
+      if String.null options.language
+        then Maybe.Nothing
+        else Maybe.Just options.language
   count <- Fetch.fetchRepositoryCount options.username
   repos <-
     Array.foldRecM
@@ -51,9 +57,18 @@ main = Aff.launchAff_ do
       []
       (Array.range 1 ((count / 100) + 1))
   let
-    filtered =
+    filterArchived xs =
+      Maybe.maybe xs (\b -> Array.filter ((eq b) <<< _.archived) xs) archived
+    filterLanguage xs =
       Maybe.maybe
-        repos
-        (\b -> Array.filter ((eq b) <<< _.archived) repos)
-        archived
+        xs
+        (\l ->
+          Array.filter
+            ((eq l) <<<
+              (Maybe.fromMaybe "") <<<
+              Nullable.toMaybe <<<
+              _.language)
+            xs)
+        language
+    filtered = filterLanguage (filterArchived repos)
   Class.liftEffect (Console.log (format filtered))
