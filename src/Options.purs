@@ -39,6 +39,8 @@ parser =
   }
     <$> Options.strOption
         ( Options.long "archived"
+        <> Options.showDefault
+        <> (Options.value "")
         <> Options.metavar "ARCHIVED"
         <> Options.help "filter archived/unarchived (true, false)" )
     <*> Options.strOption
@@ -49,6 +51,8 @@ parser =
         <> Options.help "direction (asc, desc)" )
     <*> Options.strOption
         ( Options.long "language"
+        <> Options.showDefault
+        <> (Options.value "")
         <> Options.metavar "LANGUAGE"
         <> Options.help "filter language (PureScript, ...)" )
     <*> Options.strOption
